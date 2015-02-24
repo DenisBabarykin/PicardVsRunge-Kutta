@@ -13,9 +13,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        MainForm.cpp
+        MainForm.cpp \
+    Picard.cpp
 
-HEADERS  += MainForm.h
+HEADERS  += MainForm.h \
+    Picard.h \
+    Timer.h
 
 FORMS    += MainForm.ui
 

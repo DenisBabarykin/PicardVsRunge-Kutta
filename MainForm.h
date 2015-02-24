@@ -2,6 +2,7 @@
 #define MAINFORM_H
 
 #include <QWidget>
+#include <QDoubleValidator>
 
 namespace Ui {
 class MainForm;
@@ -15,8 +16,17 @@ public:
     explicit MainForm(QWidget *parent = 0);
     ~MainForm();
 
+    void Validate();
+    void SetTabsItemsAlignement(int curRow, int curCol);
+    void PrepareTables();
+private slots:
+    void on_btnSolve_clicked();
+
 private:
     Ui::MainForm *ui;
+    double upperBound;
+    double step;
+    QDoubleValidator *initialConditionsValidator;
 };
 
 #endif // MAINFORM_H
