@@ -19,16 +19,17 @@ public:
     void Validate();
     void SetTabsItemsAlignement(int curRow, int curCol);
     void PrepareTables();
-    void PicardFill(int curRow, double x);
-    void Explicit(int curRow, double x);
-    void ImplicitMethod(int curRow, double x);
+    void XFill(int curRow, long double x);
+    void PicardFill(int curRow, long double x);
+    void ExplicitFill(int curRow, long double x);
+    void ImplicitFill(int curRow, long double x);
 private slots:
     void on_btnSolve_clicked();
 
 private:
     Ui::MainForm *ui;
-    double upperBound;
-    double step;
+    long double upperBound;
+    long double step;
     QDoubleValidator *initialConditionsValidator;
 };
 

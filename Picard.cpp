@@ -3,17 +3,17 @@
 
 // These Picard's method iteration functions calcs solution for ODE: u'(x) = x^2 + u^2
 
-double PicardFirstIteration(double x)
+long double PicardFirstIteration(long double x)
 {
     return x * x * x / 3;
 }
 
-double PartialPicardSecondIteration(double x)
+long double PartialPicardSecondIteration(long double x)
 {
     return 1 + pow(x, 4) / 21;
 }
 
-double PartialPicardThirdIteration(double x)
+long double PartialPicardThirdIteration(long double x)
 {
     return x * pow(x, 8) / 693 + pow(x, 12) / 19845;
 }

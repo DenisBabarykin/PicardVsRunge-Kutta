@@ -15,12 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         MainForm.cpp \
     Picard.cpp \
-    Runge-Kutta.cpp
+    Runge-Kutta.cpp \
+    CalcFunc.cpp
 
 HEADERS  += MainForm.h \
     Picard.h \
     Timer.h \
-    Runge-Kutta.h
+    Runge-Kutta.h \
+    CalcFunc.h
 
 FORMS    += MainForm.ui
 

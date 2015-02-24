@@ -1,11 +1,9 @@
 #ifndef EXPLICITRUNGEKUTTA_H
 #define EXPLICITRUNGEKUTTA_H
 
-double func(double x, double u);
+long double ExplicitRungeKutta(long double h, long double xprev, long double uprev, long double (*f)(long double x, long double u));
 
-double ExplicitRungeKutta(double h, double xprev, double uprev, double (*f)(double x, double u));
-
-double Implicit(double h, double x, double uprev,  double (*f)(double x, double u));
+long double Implicit(long double h, long double x, long double uprev,  long double (*f)(long double x, long double u));
 
 
 #endif // EXPLICITRUNGEKUTTA_H
