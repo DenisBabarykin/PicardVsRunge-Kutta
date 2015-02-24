@@ -4,6 +4,7 @@
 #include <cmath>
 #include "Picard.h"
 #include "Timer.h"
+#include "Runge-Kutta.h"
 
 MainForm::MainForm(QWidget *parent) :
     QWidget(parent),
@@ -58,6 +59,59 @@ void MainForm::PrepareTables()
     ui->tblwdgTime->setRowCount(nRows);
 }
 
+void MainForm::PicardFill(int curRow, double x)
+{
+    ui->tblwdgSolutions->setItem(curRow, 0, new QTableWidgetItem(QString::number(x)));
+    ui->tblwdgTime->setItem(curRow, 0, new QTableWidgetItem(QString::number(x)));
+    SetTabsItemsAlignement(curRow, 0);
+
+    ns_timer::Timer timer(true);
+    double picardFirst = PicardFirstIteration(x);
+    ui->tblwdgTime->setItem(curRow, 1, new QTableWidgetItem(QString::number(timer.stopGet())));
+    ui->tblwdgSolutions->setItem(curRow, 1, new QTableWidgetItem(QString::number(picardFirst)));
+    SetTabsItemsAlignement(curRow, 1);
+
+    timer.start(true);
+    double picardSecondPartial = PartialPicardSecondIteration(x);
+    double picardSecond = picardFirst * picardSecondPartial;
+    ui->tblwdgTime->setItem(curRow, 2, new QTableWidgetItem(QString::number(timer.stopGet())));
+    ui->tblwdgSolutions->setItem(curRow, 2, new QTableWidgetItem(QString::number(picardSecond)));
+    SetTabsItemsAlignement(curRow, 2);
+
+    timer.start(true);
+    double picardThirdPartial = PartialPicardThirdIteration(x);
+    double picardThird = picardFirst * (picardSecondPartial + picardThirdPartial);
+    ui->tblwdgTime->setItem(curRow, 3, new QTableWidgetItem(QString::number(timer.stopGet())));
+    ui->tblwdgSolutions->setItem(curRow, 3, new QTableWidgetItem(QString::number(picardThird)));
+    SetTabsItemsAlignement(curRow, 3);
+}
+
+void MainForm::Explicit(int curRow, double x)
+{
+    static double explRunge;
+    ns_timer::Timer timer(true);
+    if (x == 0)
+        explRunge = 0;
+    else
+        explRunge = ExplicitRungeKutta(step, x - step, explRunge, func);
+    ui->tblwdgTime->setItem(curRow, 4, new QTableWidgetItem(QString::number(timer.stopGet())));
+    ui->tblwdgSolutions->setItem(curRow, 4, new QTableWidgetItem(QString::number(explRunge)));
+    SetTabsItemsAlignement(curRow, 4);
+}
+
+void MainForm::ImplicitMethod(int curRow, double x)
+{
+    static double impl;
+    ns_timer::Timer timer(true);
+    if (x == 0)
+        impl = 0;
+    else
+        impl = Implicit(step, x, impl, func);
+    ui->tblwdgTime->setItem(curRow, 5, new QTableWidgetItem(QString::number(timer.stopGet())));
+    ui->tblwdgSolutions->setItem(curRow, 5, new QTableWidgetItem(QString::number(impl)));
+    SetTabsItemsAlignement(curRow, 5);
+}
+
 void MainForm::on_btnSolve_clicked()
 {
     Validate();
@@ -69,28 +123,8 @@ void MainForm::on_btnSolve_clicked()
     int curRow;
     for (x = 0, curRow = 0; x <= upperBound; x += step, ++curRow)
     {
-        ui->tblwdgSolutions->setItem(curRow, 0, new QTableWidgetItem(QString::number(x)));
-        ui->tblwdgTime->setItem(curRow, 0, new QTableWidgetItem(QString::number(x)));
-        SetTabsItemsAlignement(curRow, 0);
-
-        ns_timer::Timer timer(true);
-        double picardFirst = PicardFirstIteration(x);
-        ui->tblwdgTime->setItem(curRow, 1, new QTableWidgetItem(QString::number(timer.stopGet())));
-        ui->tblwdgSolutions->setItem(curRow, 1, new QTableWidgetItem(QString::number(picardFirst)));
-        SetTabsItemsAlignement(curRow, 1);
-
-        timer.start(true);
-        double picardSecondPartial = PartialPicardSecondIteration(x);
-        double picardSecond = picardFirst * picardSecondPartial;
-        ui->tblwdgTime->setItem(curRow, 2, new QTableWidgetItem(QString::number(timer.stopGet())));
-        ui->tblwdgSolutions->setItem(curRow, 2, new QTableWidgetItem(QString::number(picardSecond)));
-        SetTabsItemsAlignement(curRow, 2);
-
-        timer.start(true);
-        double picardThirdPartial = PartialPicardThirdIteration(x);
-        double picardThird = picardFirst * (picardSecondPartial + picardThirdPartial);
-        ui->tblwdgTime->setItem(curRow, 3, new QTableWidgetItem(QString::number(timer.stopGet())));
-        ui->tblwdgSolutions->setItem(curRow, 3, new QTableWidgetItem(QString::number(picardThird)));
-        SetTabsItemsAlignement(curRow, 3);
+        PicardFill(curRow, x);
+        Explicit(curRow, x);
+        ImplicitMethod(curRow, x);
     }
 }

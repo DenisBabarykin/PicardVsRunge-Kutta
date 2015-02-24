@@ -19,6 +19,9 @@ public:
     void Validate();
     void SetTabsItemsAlignement(int curRow, int curCol);
     void PrepareTables();
+    void PicardFill(int curRow, double x);
+    void Explicit(int curRow, double x);
+    void ImplicitMethod(int curRow, double x);
 private slots:
     void on_btnSolve_clicked();
 
